@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  todo:
+    build: .
+    command: > 
+      sh -c "python manage.py migrate && cat .env.example > .env && python manage.py runserver 0.0.0.0:8000"
+    container_name: todoctr
+    volumes:
+      - .:/AlgoToDo
+    ports:
+      - "8000:8000" 
+
+
