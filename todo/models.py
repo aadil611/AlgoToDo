@@ -19,9 +19,9 @@ class ToDo(models.Model):
         (OVERDUE, "Overdue"),
     )
 
-    
+    user          = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="users_todos")
     title         = models.CharField(max_length=100)
-    description   = models.TextField(max_length=100)
+    description   = models.TextField(max_length=1000)
     created_at    = models.DateField(auto_now_add=True)
     due_date      = models.DateField(blank=True, null=True)
     status        = models.CharField(choices=STATUS_CHOICES, default=OPEN, max_length=20)

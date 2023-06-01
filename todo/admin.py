@@ -4,15 +4,15 @@ from . models import ToDo, Tag
 
 
 class ToDoAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "description", "created_at", "due_date", "status","tagged_with")
+    list_display = ("id", "title", "description", "user", "created_at", "due_date", "status","tagged_with")
     list_display_links = ("id", "title")
-    search_fields = ("title", "description", "status","tags__name")
+    search_fields = ("title", "description", "status","tags__name", "user__username", "user__email")
     list_filter = ("status", "created_at", "due_date")
     list_per_page = 20
 
     fieldsets = (
         ("General", {
-            "fields": ("title", "description", "status")
+            "fields": ("title", "description", "status", "user")
             }
         ),
         ("Date", {

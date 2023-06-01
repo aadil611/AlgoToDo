@@ -134,4 +134,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
         "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
         'DATE_FORMAT': '%d-%m-%Y',
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.BasicAuthentication',
+        )
     }

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import datetime
 
 from .models import ToDo, Tag
 
@@ -14,7 +15,7 @@ class TagsSerializerField(serializers.ListField):
 
 
 class ToDoSerializer(serializers.ModelSerializer):
-    tags = TagsSerializerField(required=True)
+    tags = TagsSerializerField(required=False)
     
     class Meta:
         model = ToDo
@@ -22,14 +23,25 @@ class ToDoSerializer(serializers.ModelSerializer):
 
         extra_kwargs = {
             "id": {"read_only": True},
-            "created_at": {"read_only": True}
+            "created_at": {"read_only": True},
+            "user": {"read_only": True}
         }
+
+    def validate_due_date(self, value):
+        """
+            check if due date is before created date or in past
+        """
+        if value and (value < datetime.date.today() or value < self.instance.created_at):
+            raise serializers.ValidationError("Due date cannot be before created_date or in the past")
+        return value
 
     def create(self, validated_data):
         """
             check if the tag already exists otherwise create a new one then set these tags to current instance
         """
         tag_names = validated_data.pop("tags", None)
+        user = self.context["request"].user
+        validated_data["user"] = user
         instance = super().create(validated_data=validated_data)
         if tag_names:
             tags = []
@@ -39,12 +51,12 @@ class ToDoSerializer(serializers.ModelSerializer):
             instance.tags.set(tags)
         return instance
 
-    def get_tags(self, instance, validated_data):
+    def update(self, instance, validated_data):
         """
             check if the tag already exists otherwise create a new one then update these tags to current instance
         """
         tag_names = validated_data.pop("tags", None)
-        instance = super().update(instance, **validated_data)
+        instance = super().update(instance, validated_data)
         if tag_names:
             tags = []
             for tag_name in tag_names:
