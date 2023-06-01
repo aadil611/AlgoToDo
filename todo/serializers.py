@@ -31,8 +31,8 @@ class ToDoSerializer(serializers.ModelSerializer):
         """
             check if due date is before created date or in past
         """
-        if value and (value < datetime.date.today() or value < self.instance.created_at):
-            raise serializers.ValidationError("Due date cannot be before created_date or in the past")
+        if value and value < datetime.date.today():
+            raise serializers.ValidationError("Due date cannot be in the past")
         return value
 
     def create(self, validated_data):
