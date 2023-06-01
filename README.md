@@ -30,4 +30,10 @@ provide required details when asked
 
 
 # OR [ using docker-compose ]
+## after cloning goto AlgoToDo project
+> cd AlgoToDo
+
+## run following command
 > docker-compose up
+
+if your 8000 port is busy try changing ports in docker-compose file
